@@ -129,8 +129,7 @@ function setActionStatus(message) {
 function encodeState(payload) {
   const json = JSON.stringify(payload);
   const bytes = new TextEncoder().encode(json);
-  let binary = '';
-  bytes.forEach(b => { binary += String.fromCharCode(b); });
+  const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
