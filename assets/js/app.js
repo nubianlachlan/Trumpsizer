@@ -2,42 +2,54 @@
 
 const LAYOUT = [
   [
-    { key:'q' }, { key:'w' }, { key:'e' }, { key:'r' }, { key:'t' },
-    { type:'gap' },
-    { key:'y' }, { key:'u' }, { key:'i' }, { key:'o' }, { key:'p' },
-    { key:'Backspace', label:'⌫ DEL', cls:'util' }
+    { key: 'q' }, { key: 'w' }, { key: 'e' }, { key: 'r' }, { key: 't' },
+    { type: 'gap' },
+    { key: 'y' }, { key: 'u' }, { key: 'i' }, { key: 'o' }, { key: 'p' },
+    { key: 'Backspace', label: '⌫ DEL', cls: 'util' }
   ],
   [
-    { key:'a' }, { key:'s' }, { key:'d' }, { key:'f' }, { key:'g' },
-    { type:'gap' },
-    { key:'h' }, { key:'j' }, { key:'k' }, { key:'l' }, { key:';' }, { key:"'" },
-    { key:'Enter', label:'ENTER', cls:'special' }
+    { key: 'a' }, { key: 's' }, { key: 'd' }, { key: 'f' }, { key: 'g' },
+    { type: 'gap' },
+    { key: 'h' }, { key: 'j' }, { key: 'k' }, { key: 'l' }, { key: ';' }, { key: '\'' },
+    { key: 'Enter', label: 'ENTER', cls: 'special' }
   ],
   [
-    { key:'z' }, { key:'x' }, { key:'c' }, { key:'v' }, { key:'b' },
-    { type:'gap' },
-    { key:'n' }, { key:'m' }, { key:',' }, { key:'.' }, { key:'/' },
-    { key:'Escape', label:'ESC', cls:'special' }
+    { key: 'z' }, { key: 'x' }, { key: 'c' }, { key: 'v' }, { key: 'b' },
+    { type: 'gap' },
+    { key: 'n' }, { key: 'm' }, { key: ',' }, { key: '.' }, { key: '/' },
+    { key: 'Escape', label: 'ESC', cls: 'special' }
   ],
   [
-    { key:'Tab', label:'TAB', cls:'special' },
-    { key:' ', label:'SPACE  — Sad!', cls:'special', wide: true },
-    { key:'Delete', label:'🗑 CLEAR', cls:'util' }
+    { key: 'Tab', label: 'TAB', cls: 'special' },
+    { key: ' ', label: 'SPACE  — Sad!', cls: 'special', wide: true },
+    { key: 'Delete', label: '🗑 CLEAR', cls: 'util' }
   ]
 ];
 
-let phraseConfig = {};
+const VALID_TYPES = new Set(['opener', 'topic', 'eval', 'special']);
+const COOLDOWN_MS = 180;
+
+let stylePacks = {};
+let selectedStylePack = '';
 let fragments = [];
 let muted = false;
 const lastKeyTime = {};
-const COOLDOWN_MS = 180;
 
 const $textContent = document.getElementById('text-content');
 const $display = document.getElementById('display');
 const $speakingDot = document.getElementById('speaking-dot');
 const $muteBtn = document.getElementById('mute-btn');
+const $stylePackSelect = document.getElementById('style-pack-select');
+const $actionStatus = document.getElementById('action-status');
+const $shareBtn = document.getElementById('share-btn');
 
 const synth = window.speechSynthesis || null;
+
+function getActivePhraseMap() {
+  const currentPack = stylePacks[selectedStylePack];
+  if (currentPack && currentPack.phrases) return currentPack.phrases;
+  return {};
+}
 
 function chooseText(entry) {
   if (!entry) return null;
@@ -50,7 +62,7 @@ function chooseText(entry) {
 }
 
 function getPhraseFromKey(key) {
-  const entry = phraseConfig[key];
+  const entry = getActivePhraseMap()[key];
   if (!entry) return null;
   const text = chooseText(entry);
   if (!text) return null;
@@ -61,40 +73,40 @@ function speak(phrase) {
   if (muted || !synth) return;
 
   synth.cancel();
-  const u = new SpeechSynthesisUtterance(phrase.text);
+  const utterance = new SpeechSynthesisUtterance(phrase.text);
 
   switch (phrase.type) {
     case 'opener':
-      u.rate = 0.88;
-      u.pitch = 1.12;
-      u.volume = 0.9;
+      utterance.rate = 0.88;
+      utterance.pitch = 1.12;
+      utterance.volume = 0.9;
       break;
     case 'topic':
-      u.rate = 0.78;
-      u.pitch = 1.0;
-      u.volume = 1.0;
+      utterance.rate = 0.78;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
       break;
     case 'eval':
-      u.rate = 0.82;
-      u.pitch = 0.95;
-      u.volume = 0.95;
+      utterance.rate = 0.82;
+      utterance.pitch = 0.95;
+      utterance.volume = 0.95;
       break;
     case 'special':
-      u.rate = 0.65;
-      u.pitch = 1.22;
-      u.volume = 1.0;
+      utterance.rate = 0.65;
+      utterance.pitch = 1.22;
+      utterance.volume = 1.0;
       break;
     default:
-      u.rate = 0.85;
-      u.pitch = 1.0;
-      u.volume = 1.0;
+      utterance.rate = 0.85;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
   }
 
-  u.onstart = () => $speakingDot.classList.add('active');
-  u.onend = () => $speakingDot.classList.remove('active');
-  u.onerror = () => $speakingDot.classList.remove('active');
+  utterance.onstart = () => $speakingDot.classList.add('active');
+  utterance.onend = () => $speakingDot.classList.remove('active');
+  utterance.onerror = () => $speakingDot.classList.remove('active');
 
-  synth.speak(u);
+  synth.speak(utterance);
 }
 
 function escHtml(str) {
@@ -105,11 +117,52 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function setActionStatus(message) {
+  if (!$actionStatus) return;
+  $actionStatus.textContent = message;
+}
+
+function encodeState(payload) {
+  const json = JSON.stringify(payload);
+  const bytes = new TextEncoder().encode(json);
+  let binary = '';
+  bytes.forEach(b => { binary += String.fromCharCode(b); });
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function decodeState(encoded) {
+  const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const missing = padded.length % 4;
+  const withPadding = missing ? padded + '='.repeat(4 - missing) : padded;
+  const binary = atob(withPadding);
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  const json = new TextDecoder().decode(bytes);
+  return JSON.parse(json);
+}
+
+function syncUrlState() {
+  const url = new URL(window.location.href);
+  if (selectedStylePack) {
+    url.searchParams.set('style', selectedStylePack);
+  } else {
+    url.searchParams.delete('style');
+  }
+
+  if (fragments.length > 0) {
+    url.searchParams.set('state', encodeState({ fragments }));
+  } else {
+    url.searchParams.delete('state');
+  }
+
+  window.history.replaceState({}, '', url.toString());
+}
+
 function updateDisplay() {
   $textContent.innerHTML = fragments
     .map(f => `<span class="phrase ${f.type}">${escHtml(f.text)}</span>`)
     .join(' ');
   $display.scrollTop = $display.scrollHeight;
+  syncUrlState();
 }
 
 function addPhrase(phrase) {
@@ -134,13 +187,38 @@ function clearAll() {
 function copyText() {
   const text = fragments.map(f => f.text).join(' ');
   if (!text) return;
-  navigator.clipboard.writeText(text).catch(() => {
+  navigator.clipboard.writeText(text).then(() => {
+    setActionStatus('Speech text copied to clipboard.');
+  }).catch(() => {
     const ta = document.createElement('textarea');
     ta.value = text;
     document.body.appendChild(ta);
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
+    setActionStatus('Speech text copied to clipboard.');
+  });
+}
+
+function copyShareLink() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('style', selectedStylePack);
+  if (fragments.length > 0) {
+    url.searchParams.set('state', encodeState({ fragments }));
+  } else {
+    url.searchParams.delete('state');
+  }
+  const link = url.toString();
+
+  navigator.clipboard.writeText(link).then(() => {
+    if ($shareBtn) {
+      const oldLabel = $shareBtn.textContent;
+      $shareBtn.textContent = '✅ Share Link Copied';
+      setTimeout(() => { $shareBtn.textContent = oldLabel; }, 1200);
+    }
+    setActionStatus('Share link copied to clipboard.');
+  }).catch(() => {
+    setActionStatus('Unable to copy share link in this browser.');
   });
 }
 
@@ -150,6 +228,45 @@ function toggleMute() {
   if (muted && synth) {
     synth.cancel();
     $speakingDot.classList.remove('active');
+  }
+}
+
+function setStylePack(packId) {
+  if (!stylePacks[packId]) return;
+  selectedStylePack = packId;
+  if ($stylePackSelect) $stylePackSelect.value = packId;
+  buildKeyboard();
+  updateDisplay();
+  setActionStatus(`Style pack changed to ${stylePacks[packId].name}.`);
+}
+
+function sanitizeFragments(rawFragments) {
+  if (!Array.isArray(rawFragments)) return [];
+  return rawFragments
+    .filter(item => item && typeof item.text === 'string' && VALID_TYPES.has(item.type))
+    .map(item => ({
+      text: item.text.slice(0, 140),
+      type: item.type
+    }))
+    .slice(0, 200);
+}
+
+function restoreStateFromUrl() {
+  const url = new URL(window.location.href);
+  const styleFromUrl = url.searchParams.get('style');
+  if (styleFromUrl && stylePacks[styleFromUrl]) {
+    selectedStylePack = styleFromUrl;
+  }
+
+  const encodedState = url.searchParams.get('state');
+  if (!encodedState) return;
+
+  try {
+    const decoded = decodeState(encodedState);
+    fragments = sanitizeFragments(decoded.fragments);
+  } catch (err) {
+    console.warn('Unable to restore state from URL', err);
+    fragments = [];
   }
 }
 
@@ -165,8 +282,15 @@ function handleKey(key) {
     return;
   }
 
-  if (key === 'Backspace') { deleteLast(); return; }
-  if (key === 'Delete') { clearAll(); }
+  if (key === 'Backspace') {
+    deleteLast();
+    flashKey(key);
+    return;
+  }
+  if (key === 'Delete') {
+    clearAll();
+    flashKey(key);
+  }
 }
 
 document.addEventListener('keydown', e => {
@@ -176,6 +300,7 @@ document.addEventListener('keydown', e => {
 
 function buildKeyboard() {
   const $kb = document.getElementById('keyboard');
+  const activeMap = getActivePhraseMap();
   $kb.innerHTML = '';
 
   LAYOUT.forEach(rowDef => {
@@ -190,7 +315,7 @@ function buildKeyboard() {
         return;
       }
 
-      const entry = phraseConfig[def.key];
+      const entry = activeMap[def.key];
       const type = def.cls || (entry ? entry.type : 'util');
       const label = def.label || (entry ? entry.label : def.key);
 
@@ -231,18 +356,54 @@ function flashKey(key) {
   setTimeout(() => $key.classList.remove('pressed'), 160);
 }
 
+function buildStylePackSelect() {
+  if (!$stylePackSelect) return;
+  $stylePackSelect.innerHTML = '';
+
+  Object.entries(stylePacks).forEach(([packId, pack]) => {
+    const option = document.createElement('option');
+    option.value = packId;
+    option.textContent = pack.name || packId;
+    $stylePackSelect.appendChild(option);
+  });
+
+  $stylePackSelect.value = selectedStylePack;
+  $stylePackSelect.addEventListener('change', e => {
+    setStylePack(e.target.value);
+  });
+}
+
 async function loadPhrases() {
   const response = await fetch('./data/phrases.json');
   if (!response.ok) {
     throw new Error(`Unable to load phrase map: ${response.status}`);
   }
+
   const data = await response.json();
-  phraseConfig = data.phrases || {};
+
+  if (data.stylePacks && typeof data.stylePacks === 'object') {
+    stylePacks = data.stylePacks;
+    const firstPack = Object.keys(stylePacks)[0];
+    selectedStylePack = data.defaultStylePack && stylePacks[data.defaultStylePack]
+      ? data.defaultStylePack
+      : firstPack;
+    return;
+  }
+
+  stylePacks = {
+    default: {
+      name: 'Default',
+      phrases: data.phrases || {}
+    }
+  };
+  selectedStylePack = 'default';
 }
 
 async function init() {
   try {
     await loadPhrases();
+    restoreStateFromUrl();
+    buildStylePackSelect();
     buildKeyboard();
     updateDisplay();
   } catch (err) {
@@ -258,6 +419,7 @@ async function init() {
 window.deleteLast = deleteLast;
 window.clearAll = clearAll;
 window.copyText = copyText;
+window.copyShareLink = copyShareLink;
 window.toggleMute = toggleMute;
 
 init();

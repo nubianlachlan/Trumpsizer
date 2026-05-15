@@ -12,7 +12,11 @@
 
 <header>
   <h1>🎤 TRUMPSIZER</h1>
-  <p class="subtitle">The Rhetorical Keyboard — Build rally-style speeches, one key at a time</p>
+  <p class="subtitle">The Satirical Rhetorical Keyboard — Build parody political speeches, one key at a time</p>
+  <p class="disclaimer">
+    Parody project for satire and commentary only. Not affiliated with, endorsed by, or representing any real person, campaign, or office.
+    <a href="./terms.html">Terms & Disclaimer</a>
+  </p>
 </header>
 
 <div id="display" aria-live="polite" aria-label="Generated speech text">
@@ -20,11 +24,18 @@
 </div>
 
 <div class="controls">
+  <label class="control-group" for="style-pack-select">
+    <span>Style pack</span>
+    <select id="style-pack-select" aria-label="Choose phrase style pack"></select>
+  </label>
   <button class="btn" onclick="deleteLast()" title="Remove the last phrase (Backspace)">⌫ Delete Last</button>
   <button class="btn" onclick="clearAll()"   title="Clear everything (Delete key)">🗑 Clear All</button>
   <button class="btn" onclick="copyText()"   title="Copy text to clipboard">📋 Copy</button>
+  <button class="btn" id="share-btn" onclick="copyShareLink()" title="Copy a shareable link with your current speech">🔗 Copy Share Link</button>
   <button class="btn" id="mute-btn" onclick="toggleMute()" title="Toggle speech on/off">🔊 Mute</button>
 </div>
+
+<p id="action-status" class="sr-only" aria-live="polite"></p>
 
 <div class="legend">
   <div class="leg"><div class="leg-dot" style="background:#1565c0"></div><span>Openers — left side keys</span></div>
