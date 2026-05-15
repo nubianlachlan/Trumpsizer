@@ -1,0 +1,42 @@
+{
+  "phrases": {
+    "q": { "type": "opener", "label": "Believe me,", "texts": ["Believe me,", "Let me be clear,", "I can tell you this,"] },
+    "w": { "type": "opener", "label": "Look folks,", "texts": ["Look folks,", "Folks, listen,", "You know it,"] },
+    "e": { "type": "opener", "label": "Frankly,", "texts": ["Frankly,", "Quite frankly,", "Honestly,"] },
+    "r": { "type": "opener", "label": "Many people are saying", "texts": ["Many people are saying", "A lot of people say", "Everyone keeps telling me"] },
+    "t": { "type": "opener", "label": "Everybody knows", "texts": ["Everybody knows", "We all know", "It is very obvious"] },
+    "a": { "type": "opener", "label": "Let me tell you,", "texts": ["Let me tell you,", "I will tell you,", "Here is the truth,"] },
+    "s": { "type": "opener", "label": "Nobody knows more than me,", "texts": ["Nobody knows more than me,", "I know this very well,", "I have seen it all,"] },
+    "d": { "type": "opener", "label": "It's true,", "texts": ["It's true,", "That's true,", "Absolutely true,"] },
+    "f": { "type": "opener", "label": "I have to say —", "texts": ["I have to say —", "I mean this —", "You have to hear this —"] },
+    "g": { "type": "opener", "label": "Saying this for years —", "texts": ["I've been saying this for years —", "I said it from day one —", "I've said this again and again —"] },
+    "z": { "type": "opener", "label": "Nobody does it better,", "texts": ["Nobody does it better,", "We do it better than anyone,", "No one comes close,"] },
+    "x": { "type": "opener", "label": "Going to be beautiful,", "texts": ["It's going to be beautiful,", "It's going to be fantastic,", "It's going to be incredible,"] },
+    "c": { "type": "opener", "label": "We're going to win,", "texts": ["We're going to win,", "We're going to succeed,", "We're getting results,"] },
+    "v": { "type": "opener", "label": "Trust me,", "texts": ["Trust me,", "Mark my words,", "I promise you,"] },
+    "b": { "type": "opener", "label": "The best, absolute best —", "texts": ["The best, the absolute best —", "Top level, really top level —", "Best in class, no question —"] },
+
+    "y": { "type": "topic", "label": "China", "texts": ["China", "trade policy", "our manufacturing base"] },
+    "u": { "type": "topic", "label": "The media", "texts": ["the media", "press briefings", "television pundits"] },
+    "i": { "type": "topic", "label": "The border", "texts": ["the border", "immigration process", "border security operations"] },
+    "o": { "type": "topic", "label": "The economy", "texts": ["the economy", "small business growth", "job numbers"] },
+    "p": { "type": "topic", "label": "America", "texts": ["America", "the country", "our national direction"] },
+    "h": { "type": "topic", "label": "The fake news", "texts": ["the fake news", "news coverage", "headlines every morning"] },
+    "j": { "type": "topic", "label": "The deep state", "texts": ["the deep state", "federal agencies", "Washington bureaucracy"] },
+    "k": { "type": "topic", "label": "Our great people", "texts": ["our great people", "working families", "our supporters"] },
+    "l": { "type": "topic", "label": "The radical left", "texts": ["the radical left", "Congress", "the opposition"] },
+
+    "n": { "type": "eval", "label": "is tremendous", "texts": ["is tremendous", "is incredibly strong", "is delivering bigly"] },
+    "m": { "type": "eval", "label": "is a total disaster", "texts": ["is a total disaster", "is a complete failure", "is not acceptable"] },
+    ",": { "type": "eval", "label": "is out of control", "texts": ["is out of control", "is going off the rails", "is totally unmanageable"] },
+    ".": { "type": "eval", "label": "is rigged", "texts": ["is rigged", "is stacked against us", "is badly broken"] },
+    "/": { "type": "eval", "label": "nobody's ever seen it", "texts": ["nobody's ever seen anything like it", "we've never seen it before", "it's unlike anything in modern politics"] },
+    ";": { "type": "eval", "label": "is a complete mess", "texts": ["is a complete mess", "is handled very poorly", "is an absolute mess"] },
+    "'": { "type": "eval", "label": "is beautiful, so beautiful", "texts": ["is beautiful, so beautiful", "is truly incredible", "is absolutely fantastic"] },
+
+    "Enter": { "type": "special", "label": "WRONG!", "texts": ["WRONG!", "Totally wrong!", "Not even close!"] },
+    " ": { "type": "special", "label": "— Sad!", "texts": ["— Sad!", "— Very sad!", "— What a shame!"] },
+    "Tab": { "type": "special", "label": "Many such cases!", "texts": ["Many such cases!", "Happens all the time!", "Everyone is talking about it!"] },
+    "Escape": { "type": "special", "label": "That I can tell you.", "texts": ["That I can tell you.", "I can tell you that right now.", "And that's the truth."] }
+  }
+}

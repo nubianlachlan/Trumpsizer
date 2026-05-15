@@ -4,7 +4,7 @@ A browser-based meme keyboard game where every key press triggers a short spoken
 
 ## How to Play
 
-Open `index.html` in any modern browser (or visit the deployed site) and start typing. Each key maps to a phrase fragment:
+Open `index.html` in any modern browser (or visit the deployed site) and start typing. Each key maps to a phrase fragment (with per-key phrase variation loaded from JSON):
 
 | Zone | Keys | Phrase Type | Example |
 |------|------|-------------|---------|
@@ -27,6 +27,8 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
 ## Features
 
 - **35 mapped keys** — all 26 letters plus punctuation and special keys
+- **External JSON phrase map** — `data/phrases.json` stores key → phrase variants (`texts`) and labels
+- **Randomised phrase variants** — each key can speak multiple alternatives for more variety
 - **SpeechSynthesis API** — stylised rhetorical delivery with cadence tuned per phrase type  
   - Openers: confident, slightly quick, higher pitch  
   - Topics: deliberate, slower, neutral pitch  
@@ -34,7 +36,7 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
   - Punchlines: punchy, slow, high pitch for comedic effect
 - **Colour-coded keyboard** — spatial grouping reinforces sentence construction through muscle memory
 - **Live text display** — accumulates coloured phrase spans as you type
-- **Zero dependencies** — single `index.html`, fully frontend-only static site
+- **Zero dependencies** — fully frontend-only static site (`index.html` + `assets/css/styles.css` + `assets/js/app.js` + `data/phrases.json`)
 
 ## Phrase Design
 
@@ -46,6 +48,19 @@ The phrase library was designed through corpus-style analysis of rally-speech rh
 - **Punchlines** are punchy rebukes, pattern generalisations, and certainty closers
 
 These building blocks interlock cleanly — *opener → topic → evaluation → punchline* — producing fluent, funny sentences without attempting to replicate any individual's voice or biometric characteristics.
+
+## Project Structure
+
+```text
+index.html
+assets/
+  css/styles.css
+  js/app.js
+data/
+  phrases.json
+docs/
+  style-improvement-guide.md
+```
 
 ## Running Locally
 
