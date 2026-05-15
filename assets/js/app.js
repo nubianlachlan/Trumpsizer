@@ -129,7 +129,7 @@ function setActionStatus(message) {
 function encodeState(payload) {
   const json = JSON.stringify(payload);
   const bytes = new TextEncoder().encode(json);
-  const charString = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+  const charString = bytes.reduce((str, byte) => str + String.fromCharCode(byte), '');
   return btoa(charString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
@@ -246,7 +246,7 @@ function setStylePack(packId) {
 function sanitizeFragments(rawFragments) {
   if (!Array.isArray(rawFragments)) return [];
   return rawFragments
-    .filter(item => item && typeof item.text === 'string' && VALID_TYPES.has(item.type))
+    .filter(item => item && typeof item.text === 'string' && typeof item.type === 'string' && VALID_TYPES.has(item.type))
     .map(item => ({
       text: item.text.slice(0, MAX_FRAGMENT_TEXT_LENGTH),
       type: item.type
@@ -386,7 +386,7 @@ async function loadPhrases() {
 
   if (data.stylePacks && typeof data.stylePacks === 'object') {
     stylePacks = data.stylePacks;
-    const firstPack = Object.keys(stylePacks)[0];
+    const firstPack = stylePacks.campaign ? 'campaign' : Object.keys(stylePacks)[0];
     selectedStylePack = data.defaultStylePack && stylePacks[data.defaultStylePack]
       ? data.defaultStylePack
       : firstPack;
