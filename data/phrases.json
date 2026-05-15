@@ -13,7 +13,7 @@
         "s": { "type": "opener", "label": "I've watched this closely,", "texts": ["I've watched this closely,", "I've followed this for years,", "I've seen this up close,"] },
         "d": { "type": "opener", "label": "It's true,", "texts": ["It's true,", "That's true,", "Absolutely true,"] },
         "f": { "type": "opener", "label": "I have to say —", "texts": ["I have to say —", "I mean this —", "You need to hear this —"] },
-        "g": { "type": "opener", "label": "Been saying this for years —", "texts": ["I've been saying this for years —", "I've said this from day one —", "I've repeated this again and again —"] },
+        "g": { "type": "opener", "label": "I've been saying this for years —", "texts": ["I've been saying this for years —", "I've said this from day one —", "I've repeated this again and again —"] },
         "z": { "type": "opener", "label": "We can do better,", "texts": ["We can do better,", "We should aim higher,", "We know how to improve this,"] },
         "x": { "type": "opener", "label": "It's going to be huge,", "texts": ["It's going to be huge,", "It's going to be big,", "It's going to be a major shift,"] },
         "c": { "type": "opener", "label": "We're going to win,", "texts": ["We're going to win,", "We're going to get results,", "We're going to turn this around,"] },

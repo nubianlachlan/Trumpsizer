@@ -30,6 +30,8 @@ const VALID_TYPES = new Set(['opener', 'topic', 'eval', 'special']);
 const COOLDOWN_MS = 180;
 const MAX_FRAGMENT_TEXT_LENGTH = 140;
 const MAX_FRAGMENT_COUNT = 200;
+const SHARE_BUTTON_FEEDBACK_MS = 1200;
+const KEY_FLASH_DURATION_MS = 160;
 
 let stylePacks = {};
 let selectedStylePack = '';
@@ -216,7 +218,7 @@ function copyShareLink() {
     if ($shareBtn) {
       const oldLabel = $shareBtn.textContent;
       $shareBtn.textContent = '✅ Share Link Copied';
-      setTimeout(() => { $shareBtn.textContent = oldLabel; }, 1200);
+      setTimeout(() => { $shareBtn.textContent = oldLabel; }, SHARE_BUTTON_FEEDBACK_MS);
     }
     setActionStatus('Share link copied to clipboard.');
   }).catch(() => {
@@ -355,7 +357,7 @@ function flashKey(key) {
   const $key = document.querySelector(`.key[data-key="${CSS.escape(key)}"]`);
   if (!$key) return;
   $key.classList.add('pressed');
-  setTimeout(() => $key.classList.remove('pressed'), 160);
+  setTimeout(() => $key.classList.remove('pressed'), KEY_FLASH_DURATION_MS);
 }
 
 function buildStylePackSelect() {
