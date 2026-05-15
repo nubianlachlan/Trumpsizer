@@ -129,14 +129,14 @@ function setActionStatus(message) {
 function encodeState(payload) {
   const json = JSON.stringify(payload);
   const bytes = new TextEncoder().encode(json);
-  const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  const charString = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+  return btoa(charString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
 function decodeState(encoded) {
   const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
-  const missing = padded.length % 4;
-  const withPadding = missing ? padded + '='.repeat(4 - missing) : padded;
+  const missingPadding = padded.length % 4;
+  const withPadding = missingPadding ? padded + '='.repeat(4 - missingPadding) : padded;
   const binary = atob(withPadding);
   const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
   const json = new TextDecoder().decode(bytes);
