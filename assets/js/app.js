@@ -232,7 +232,7 @@ function flashKey(key) {
 }
 
 async function loadPhrases() {
-  const response = await fetch('./data/phrases.json', { cache: 'no-store' });
+  const response = await fetch('./data/phrases.json');
   if (!response.ok) {
     throw new Error(`Unable to load phrase map: ${response.status}`);
   }
