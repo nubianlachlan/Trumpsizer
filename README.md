@@ -70,7 +70,7 @@ terms.html
 
 ## Terms & Disclaimer
 
-See `/home/runner/work/Trumpsizer/Trumpsizer/terms.html` for acceptable-use and non-affiliation guidance.
+See `./terms.html` for acceptable-use and non-affiliation guidance.
 
 ## Running Locally
 

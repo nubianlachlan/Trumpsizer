@@ -28,6 +28,8 @@ const LAYOUT = [
 
 const VALID_TYPES = new Set(['opener', 'topic', 'eval', 'special']);
 const COOLDOWN_MS = 180;
+const MAX_FRAGMENT_TEXT_LENGTH = 140;
+const MAX_FRAGMENT_COUNT = 200;
 
 let stylePacks = {};
 let selectedStylePack = '';
@@ -245,10 +247,10 @@ function sanitizeFragments(rawFragments) {
   return rawFragments
     .filter(item => item && typeof item.text === 'string' && VALID_TYPES.has(item.type))
     .map(item => ({
-      text: item.text.slice(0, 140),
+      text: item.text.slice(0, MAX_FRAGMENT_TEXT_LENGTH),
       type: item.type
     }))
-    .slice(0, 200);
+    .slice(0, MAX_FRAGMENT_COUNT);
 }
 
 function restoreStateFromUrl() {
