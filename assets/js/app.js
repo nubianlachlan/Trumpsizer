@@ -474,8 +474,10 @@ async function speak(phrase) {
     } catch (err) {
       console.warn('External parody voice unavailable, falling back to free/browser TTS.', err);
       externalTtsUnavailable = true;
-      if (selectedVoiceMode === 'auto' && !freeTtsUnavailable) {
-        setActionStatus('Parody voice API unavailable — trying free API fallback.');
+      if (selectedVoiceMode === 'auto') {
+        setActionStatus(!freeTtsUnavailable
+          ? 'Parody voice API unavailable — trying free API fallback.'
+          : 'Parody voice API unavailable — using browser fallback.');
       }
     }
   }
