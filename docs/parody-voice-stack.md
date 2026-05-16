@@ -22,7 +22,8 @@ Deliver a voice that feels close in cadence and rhetorical energy while remainin
 
 - Frontend keeps keyboard + phrase-map architecture.
 - Voice engine supports:
-  - `auto` mode: external API first, browser SpeechSynthesis fallback.
+  - `auto` mode: external parody API first, then free StreamElements API, then browser SpeechSynthesis fallback.
+  - `free` mode: StreamElements API first, browser SpeechSynthesis fallback.
   - `browser` mode: SpeechSynthesis only.
 - Voice presets:
   - `satire-subtle`
@@ -52,6 +53,15 @@ Supported response shapes:
 - Binary audio response (`audio/*` content type), or
 - JSON with `audioBase64` + optional `mimeType` (must be one of `audio/mpeg`, `audio/mp3`, `audio/wav`, `audio/ogg`, `audio/webm`; defaults to `audio/mpeg`), or
 - JSON with `audioUrl`
+
+## Free TTS API contract (default provider)
+
+`GET https://api.streamelements.com/kappa/v2/speech?voice=<voice>&text=<text>`
+
+App behavior:
+- Uses preset-based voices (`Matthew`/`Brian`).
+- Supports override via `?freeTtsEndpoint=` URL param or `window.TRUMPSIZER_FREE_TTS_ENDPOINT`.
+- Expects binary audio and caches by endpoint + voice + phrase payload.
 
 ## Caching strategy
 

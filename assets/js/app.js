@@ -27,7 +27,7 @@ const LAYOUT = [
 ];
 
 const VALID_TYPES = new Set(['opener', 'topic', 'eval', 'special']);
-const ALLOWED_VOICE_MODES = new Set(['auto', 'browser']);
+const ALLOWED_VOICE_MODES = new Set(['auto', 'free', 'browser']);
 const DEFAULT_VOICE_MODE = 'auto';
 const DEFAULT_VOICE_PRESET = 'rally-comic';
 const COOLDOWN_MS = 180;
@@ -37,6 +37,12 @@ const SHARE_BUTTON_FEEDBACK_MS = 1200;
 const KEY_FLASH_DURATION_MS = 160;
 const EXTERNAL_TTS_TIMEOUT_MS = 2400;
 const TTS_CACHE_MAX_ENTRIES = 220;
+const FREE_TTS_FALLBACK_VOICE = 'Brian';
+const FREE_TTS_VOICE_BY_PRESET = {
+  'satire-subtle': 'Matthew',
+  'satire-strong': 'Brian',
+  'rally-comic': 'Brian'
+};
 // These substrings are common in built-in English voices and help bias selection away from robotic defaults.
 const VOICE_NAME_FILTER_KEYWORDS = ['david', 'microsoft', 'male', 'daniel', 'guy', 'ryan'];
 const ALLOWED_AUDIO_MIME_TYPES = new Set(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm']);
@@ -115,6 +121,7 @@ let selectedVoicePreset = DEFAULT_VOICE_PRESET;
 let speechToken = 0;
 let currentAudio = null;
 let externalTtsUnavailable = false;
+let freeTtsUnavailable = false;
 let preferredVoiceName = null;
 
 const ttsCache = new Map();
@@ -250,8 +257,21 @@ function getTtsEndpoint() {
   return '/api/tts';
 }
 
-function buildCacheKey(phrase) {
-  return [getTtsEndpoint(), selectedStylePack, selectedVoicePreset, phrase.type, phrase.text].join('::');
+function getFreeTtsEndpoint() {
+  const fromUrl = new URL(window.location.href).searchParams.get('freeTtsEndpoint');
+  if (fromUrl) return fromUrl;
+  if (typeof window.TRUMPSIZER_FREE_TTS_ENDPOINT === 'string' && window.TRUMPSIZER_FREE_TTS_ENDPOINT) {
+    return window.TRUMPSIZER_FREE_TTS_ENDPOINT;
+  }
+  return 'https://api.streamelements.com/kappa/v2/speech';
+}
+
+function getFreeTtsVoice() {
+  return FREE_TTS_VOICE_BY_PRESET[selectedVoicePreset] || FREE_TTS_FALLBACK_VOICE;
+}
+
+function buildCacheKey(phrase, source) {
+  return [source, selectedStylePack, selectedVoicePreset, phrase.type, phrase.text].join('::');
 }
 
 function cacheAudioUrl(cacheKey, audioUrl) {
@@ -267,11 +287,11 @@ function cacheAudioUrl(cacheKey, audioUrl) {
 }
 
 async function fetchExternalTtsAudioUrl(phrase) {
-  const cacheKey = buildCacheKey(phrase);
+  const endpoint = getTtsEndpoint();
+  const cacheKey = buildCacheKey(phrase, endpoint);
   const cached = ttsCache.get(cacheKey);
   if (cached) return cached;
 
-  const endpoint = getTtsEndpoint();
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), EXTERNAL_TTS_TIMEOUT_MS);
 
@@ -327,8 +347,49 @@ async function fetchExternalTtsAudioUrl(phrase) {
   }
 }
 
+async function fetchFreeTtsAudioUrl(phrase) {
+  const endpoint = getFreeTtsEndpoint();
+  const voice = getFreeTtsVoice();
+  const cacheKey = buildCacheKey(phrase, `${endpoint}?voice=${voice}`);
+  const cached = ttsCache.get(cacheKey);
+  if (cached) return cached;
+
+  const url = new URL(endpoint);
+  url.searchParams.set('voice', voice);
+  url.searchParams.set('text', phrase.text);
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), EXTERNAL_TTS_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      throw new Error(`Free TTS API returned ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    if (!blob || blob.size === 0) {
+      throw new Error('Free TTS API response did not contain playable audio');
+    }
+
+    const blobUrl = URL.createObjectURL(blob);
+    cacheAudioUrl(cacheKey, blobUrl);
+    return blobUrl;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 function shouldUseExternalTts() {
   return selectedVoiceMode === 'auto' && !externalTtsUnavailable;
+}
+
+function shouldUseFreeTts() {
+  return (selectedVoiceMode === 'free' || selectedVoiceMode === 'auto') && !freeTtsUnavailable;
 }
 
 function playAudioUrl(audioUrl, token) {
@@ -413,7 +474,22 @@ async function speak(phrase) {
     } catch (err) {
       console.warn('External parody voice unavailable, falling back to browser TTS.', err);
       externalTtsUnavailable = true;
-      setActionStatus('Parody voice API unavailable — using browser fallback.');
+      if (selectedVoiceMode === 'auto') {
+        setActionStatus('Parody voice API unavailable — trying free API fallback.');
+      }
+    }
+  }
+
+  if (shouldUseFreeTts()) {
+    try {
+      const audioUrl = await fetchFreeTtsAudioUrl(phrase);
+      if (token !== speechToken) return;
+      await playAudioUrl(audioUrl, token);
+      return;
+    } catch (err) {
+      console.warn('Free TTS API unavailable, falling back to browser TTS.', err);
+      freeTtsUnavailable = true;
+      setActionStatus('Free TTS API unavailable — using browser fallback.');
     }
   }
 
@@ -574,11 +650,18 @@ function setVoiceMode(mode) {
   if (!ALLOWED_VOICE_MODES.has(mode)) return;
   selectedVoiceMode = mode;
   externalTtsUnavailable = false;
+  freeTtsUnavailable = false;
   if ($voiceModeSelect) $voiceModeSelect.value = mode;
   syncUrlState();
-  setActionStatus(mode === 'browser'
-    ? 'Voice engine set to browser only.'
-    : 'Voice engine set to auto (API with browser fallback).');
+  if (mode === 'browser') {
+    setActionStatus('Voice engine set to browser only.');
+    return;
+  }
+  if (mode === 'free') {
+    setActionStatus('Voice engine set to free API (with browser fallback).');
+    return;
+  }
+  setActionStatus('Voice engine set to auto (parody API → free API → browser fallback).');
 }
 
 function setVoicePreset(preset) {

@@ -33,7 +33,7 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
 - **External JSON phrase map** — `data/phrases.json` stores style packs and key → phrase variants (`texts`)
 - **Randomised phrase variants** — each key can speak multiple alternatives for more variety
 - **Shareable links** — copy a URL that preserves the selected style pack and current generated speech
-- **Voice engine modes** — `auto` (external parody TTS API with fallback) or `browser` only
+- **Voice engine modes** — `auto` (external parody API → free StreamElements API → browser fallback), `free` (StreamElements API → browser fallback), or `browser` only
 - **Voice presets** — `satire-subtle`, `satire-strong`, `rally-comic`
 - **External TTS caching** — per-phrase audio caching for lower latency during rapid play
 - **SpeechSynthesis fallback** — stylised rhetorical delivery remains available when API is unavailable
