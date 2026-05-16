@@ -50,7 +50,7 @@ Request fields:
 Supported response shapes:
 
 - Binary audio response (`audio/*` content type), or
-- JSON with `audioBase64` + optional `mimeType`, or
+- JSON with `audioBase64` + optional `mimeType` (defaults to `audio/mpeg` when omitted), or
 - JSON with `audioUrl`
 
 ## Caching strategy

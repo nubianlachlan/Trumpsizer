@@ -231,6 +231,7 @@ function buildCacheKey(phrase) {
 
 function cacheAudioUrl(cacheKey, audioUrl) {
   if (!cacheKey || !audioUrl) return;
+  // Move existing entries to the newest position so Map iteration order acts as an LRU queue.
   if (ttsCache.has(cacheKey)) ttsCache.delete(cacheKey);
   ttsCache.set(cacheKey, audioUrl);
 
@@ -559,11 +560,14 @@ function sanitizeFragments(rawFragments) {
   if (!Array.isArray(rawFragments)) return [];
   return rawFragments
     .filter(item => item && typeof item.text === 'string' && typeof item.type === 'string' && VALID_TYPES.has(item.type))
-    .map(item => ({
-      text: normalizePhraseText(item.text).slice(0, MAX_FRAGMENT_TEXT_LENGTH),
-      type: item.type
-    }))
-    .filter(item => passesCompliance(item.text))
+    .map(item => {
+      const normalizedText = normalizePhraseText(item.text).slice(0, MAX_FRAGMENT_TEXT_LENGTH);
+      return {
+        text: normalizedText,
+        type: item.type
+      };
+    })
+    .filter(item => item.text && !COMPLIANCE_BLOCK_PATTERNS.some(pattern => pattern.test(item.text)))
     .slice(0, MAX_FRAGMENT_COUNT);
 }
 
