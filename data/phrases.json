@@ -93,7 +93,7 @@
         "q": { "type": "opener", "label": "Let me be clear,", "texts": ["Let me be clear,", "Let's be very clear,", "I'll say it clearly,"] },
         "w": { "type": "opener", "label": "Look, folks,", "texts": ["Look, folks,", "Folks, look,", "Listen, folks,"] },
         "e": { "type": "opener", "label": "Honestly,", "texts": ["Honestly,", "Quite honestly,", "Very honestly,"] },
-        "r": { "type": "opener", "label": "People are saying", "texts": ["People are saying", "A lot of people are saying", "Everyone keeps telling me"] },
+        "r": { "type": "opener", "label": "People are saying", "texts": ["People are saying", "A lot of people are saying", "Everyone keeps telling me,"] },
         "t": { "type": "opener", "label": "You can see it,", "texts": ["You can see it,", "Everybody sees it,", "You know it when you see it,"] },
         "a": { "type": "opener", "label": "I'll tell you this,", "texts": ["I'll tell you this,", "I can tell you this,", "I'm telling you right now,"] },
         "s": { "type": "opener", "label": "I've watched this,", "texts": ["I've watched this,", "I've watched this closely,", "I've seen this for years,"] },

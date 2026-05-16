@@ -155,10 +155,17 @@ function passesComplianceNormalized(normalizedText) {
 
 function pickVoiceByPreference(voices) {
   if (!Array.isArray(voices) || voices.length === 0) return null;
-  return voices.find(v =>
+
+  const enUsHinted = voices.find(v =>
     /^en(-|_)?us$/i.test(v.lang) &&
       VOICE_NAME_FILTER_KEYWORDS.some(keyword => v.name.toLowerCase().includes(keyword))
-  ) || voices.find(v => /^en(-|_)?us$/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+  );
+  if (enUsHinted) return enUsHinted;
+
+  const enUsAny = voices.find(v => /^en(-|_)?us$/i.test(v.lang));
+  if (enUsAny) return enUsAny;
+
+  return voices.find(v => /^en/i.test(v.lang)) || null;
 }
 
 function getSafeAudioMimeType(rawMimeType) {
@@ -247,7 +254,7 @@ function buildCacheKey(phrase) {
 
 function cacheAudioUrl(cacheKey, audioUrl) {
   if (!cacheKey || !audioUrl) return;
-  // Move existing entries to the newest position so Map iteration order acts as an LRU queue.
+  // Delete+set moves the key to the Map tail; we evict from the head to mimic LRU order.
   if (ttsCache.has(cacheKey)) ttsCache.delete(cacheKey);
   ttsCache.set(cacheKey, audioUrl);
 
@@ -324,7 +331,11 @@ function shouldUseExternalTts() {
 
 function playAudioUrl(audioUrl, token) {
   return new Promise((resolve, reject) => {
-    if (!audioUrl || token !== speechToken) {
+    if (token !== speechToken) {
+      resolve(false);
+      return;
+    }
+    if (!audioUrl) {
       resolve(false);
       return;
     }
@@ -352,7 +363,11 @@ function playAudioUrl(audioUrl, token) {
 
 function speakWithBrowserSynth(phrase, token) {
   return new Promise(resolve => {
-    if (!synth || token !== speechToken) {
+    if (token !== speechToken) {
+      resolve(false);
+      return;
+    }
+    if (!synth) {
       resolve(false);
       return;
     }
@@ -583,7 +598,7 @@ function sanitizeFragments(rawFragments) {
         type: item.type
       };
     })
-    // URL state can be user-supplied, so compliance is re-checked here intentionally.
+    // Defense-in-depth: URL state is user-controlled, so compliance is re-checked during restore.
     .filter(item => passesComplianceNormalized(item.text))
     .slice(0, MAX_FRAGMENT_COUNT);
 }
