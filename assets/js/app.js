@@ -472,7 +472,7 @@ async function speak(phrase) {
       await playAudioUrl(audioUrl, token);
       return;
     } catch (err) {
-      console.warn('External parody voice unavailable, falling back to browser TTS.', err);
+      console.warn('External parody voice unavailable, falling back to free/browser TTS.', err);
       externalTtsUnavailable = true;
       if (selectedVoiceMode === 'auto' && !freeTtsUnavailable) {
         setActionStatus('Parody voice API unavailable — trying free API fallback.');
