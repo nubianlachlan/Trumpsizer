@@ -50,7 +50,7 @@ Request fields:
 Supported response shapes:
 
 - Binary audio response (`audio/*` content type), or
-- JSON with `audioBase64` + optional `mimeType` (defaults to `audio/mpeg` when omitted), or
+- JSON with `audioBase64` + optional `mimeType` (must be one of `audio/mpeg`, `audio/mp3`, `audio/wav`, `audio/ogg`, `audio/webm`; defaults to `audio/mpeg`), or
 - JSON with `audioUrl`
 
 ## Caching strategy
@@ -73,7 +73,7 @@ Score each preset from 1–5:
 3. **Intelligibility** (clarity of words)
 4. **Non-identity safety** (clearly not exact imitation)
 
-## Tuning order (4–6 controls first)
+## Tuning order (prioritize 1–4, then 5–6)
 
 1. speaking rate contour
 2. pause length

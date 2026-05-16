@@ -37,7 +37,8 @@ const SHARE_BUTTON_FEEDBACK_MS = 1200;
 const KEY_FLASH_DURATION_MS = 160;
 const EXTERNAL_TTS_TIMEOUT_MS = 2400;
 const TTS_CACHE_MAX_ENTRIES = 220;
-const PREFERRED_VOICE_HINTS = ['david', 'microsoft', 'male', 'daniel', 'guy', 'ryan'];
+const VOICE_NAME_FILTER_KEYWORDS = ['david', 'microsoft', 'male', 'daniel', 'guy', 'ryan'];
+const ALLOWED_AUDIO_MIME_TYPES = new Set(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm']);
 
 const VOICE_PRESETS = {
   'satire-subtle': {
@@ -143,9 +144,27 @@ function normalizePhraseText(text) {
 
 function passesCompliance(text) {
   const normalized = normalizePhraseText(text);
-  if (!normalized) return false;
-  if (normalized.length > MAX_FRAGMENT_TEXT_LENGTH) return false;
-  return !COMPLIANCE_BLOCK_PATTERNS.some(pattern => pattern.test(normalized));
+  return passesComplianceNormalized(normalized);
+}
+
+function passesComplianceNormalized(normalizedText) {
+  if (!normalizedText) return false;
+  if (normalizedText.length > MAX_FRAGMENT_TEXT_LENGTH) return false;
+  return !COMPLIANCE_BLOCK_PATTERNS.some(pattern => pattern.test(normalizedText));
+}
+
+function pickVoiceByPreference(voices) {
+  if (!Array.isArray(voices) || voices.length === 0) return null;
+  return voices.find(v =>
+    /^en(-|_)?us$/i.test(v.lang) &&
+      VOICE_NAME_FILTER_KEYWORDS.some(keyword => v.name.toLowerCase().includes(keyword))
+  ) || voices.find(v => /^en(-|_)?us$/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+}
+
+function getSafeAudioMimeType(rawMimeType) {
+  if (typeof rawMimeType !== 'string') return 'audio/mpeg';
+  const candidate = rawMimeType.toLowerCase().trim();
+  return ALLOWED_AUDIO_MIME_TYPES.has(candidate) ? candidate : 'audio/mpeg';
 }
 
 function chooseText(entry) {
@@ -195,10 +214,7 @@ function getPreferredVoice() {
     if (remembered) return remembered;
   }
 
-  const priority = voices.find(v =>
-    /^en(-|_)?us$/i.test(v.lang) &&
-      PREFERRED_VOICE_HINTS.some(hint => v.name.toLowerCase().includes(hint))
-  ) || voices.find(v => /^en(-|_)?us$/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+  const priority = pickVoiceByPreference(voices);
 
   if (priority) preferredVoiceName = priority.name;
   return priority || null;
@@ -285,7 +301,7 @@ async function fetchExternalTtsAudioUrl(phrase) {
     let audioUrl = '';
 
     if (typeof payload.audioBase64 === 'string' && payload.audioBase64) {
-      const mimeType = typeof payload.mimeType === 'string' ? payload.mimeType : 'audio/mpeg';
+      const mimeType = getSafeAudioMimeType(payload.mimeType);
       audioUrl = `data:${mimeType};base64,${payload.audioBase64}`;
     } else if (typeof payload.audioUrl === 'string' && payload.audioUrl) {
       audioUrl = payload.audioUrl;
@@ -567,7 +583,8 @@ function sanitizeFragments(rawFragments) {
         type: item.type
       };
     })
-    .filter(item => item.text && !COMPLIANCE_BLOCK_PATTERNS.some(pattern => pattern.test(item.text)))
+    // URL state can be user-supplied, so compliance is re-checked here intentionally.
+    .filter(item => passesComplianceNormalized(item.text))
     .slice(0, MAX_FRAGMENT_COUNT);
 }
 
