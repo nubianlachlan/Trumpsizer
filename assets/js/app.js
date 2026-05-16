@@ -37,6 +37,7 @@ const SHARE_BUTTON_FEEDBACK_MS = 1200;
 const KEY_FLASH_DURATION_MS = 160;
 const EXTERNAL_TTS_TIMEOUT_MS = 2400;
 const TTS_CACHE_MAX_ENTRIES = 220;
+// These substrings are common in built-in English voices and help bias selection away from robotic defaults.
 const VOICE_NAME_FILTER_KEYWORDS = ['david', 'microsoft', 'male', 'daniel', 'guy', 'ryan'];
 const ALLOWED_AUDIO_MIME_TYPES = new Set(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm']);
 
@@ -171,6 +172,7 @@ function pickVoiceByPreference(voices) {
 function getSafeAudioMimeType(rawMimeType) {
   if (typeof rawMimeType !== 'string') return 'audio/mpeg';
   const candidate = rawMimeType.toLowerCase().trim();
+  // Restrict MIME type to known-safe audio values before constructing a data URL.
   return ALLOWED_AUDIO_MIME_TYPES.has(candidate) ? candidate : 'audio/mpeg';
 }
 
