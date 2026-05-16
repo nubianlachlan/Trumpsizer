@@ -1,6 +1,8 @@
 # 🎤 TRUMPSIZER — The Rhetorical Keyboard
 
-A browser-based meme keyboard game where every key press triggers a short spoken phrase, letting you rapidly assemble hilarious, rally-style speech patterns.
+A browser-based satire keyboard game where every key press triggers a short spoken phrase, letting you rapidly assemble parody political speech patterns.
+
+> **Parody disclaimer:** This is a satire project for commentary/comedy. It is not affiliated with, endorsed by, or representing any real person, campaign, office, or organization.
 
 ## How to Play
 
@@ -27,8 +29,10 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
 ## Features
 
 - **35 mapped keys** — all 26 letters plus punctuation and special keys
-- **External JSON phrase map** — `data/phrases.json` stores key → phrase variants (`texts`) and labels
+- **Style packs** — choose between multiple tone packs from one JSON config
+- **External JSON phrase map** — `data/phrases.json` stores style packs and key → phrase variants (`texts`)
 - **Randomised phrase variants** — each key can speak multiple alternatives for more variety
+- **Shareable links** — copy a URL that preserves the selected style pack and current generated speech
 - **SpeechSynthesis API** — stylised rhetorical delivery with cadence tuned per phrase type  
   - Openers: confident, slightly quick, higher pitch  
   - Topics: deliberate, slower, neutral pitch  
@@ -36,6 +40,7 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
   - Punchlines: punchy, slow, high pitch for comedic effect
 - **Colour-coded keyboard** — spatial grouping reinforces sentence construction through muscle memory
 - **Live text display** — accumulates coloured phrase spans as you type
+- **Safer content posture** — phrase packs focus on generic political rhetoric patterns rather than identity mimicry
 - **Zero dependencies** — fully frontend-only static site (`index.html` + `assets/css/styles.css` + `assets/js/app.js` + `data/phrases.json`)
 
 ## Phrase Design
@@ -47,7 +52,7 @@ The phrase library was designed through corpus-style analysis of rally-speech rh
 - **Evaluations** use superlative praise, alarm framing, and conspiracy framing
 - **Punchlines** are punchy rebukes, pattern generalisations, and certainty closers
 
-These building blocks interlock cleanly — *opener → topic → evaluation → punchline* — producing fluent, funny sentences without attempting to replicate any individual's voice or biometric characteristics.
+These building blocks interlock cleanly — *opener → topic → evaluation → punchline* — producing fluent, funny sentences while avoiding direct impersonation claims.
 
 ## Project Structure
 
@@ -60,7 +65,12 @@ data/
   phrases.json
 docs/
   style-improvement-guide.md
+terms.html
 ```
+
+## Terms & Disclaimer
+
+See `./terms.html` for acceptable-use and non-affiliation guidance.
 
 ## Running Locally
 
@@ -71,3 +81,9 @@ python3 -m http.server 8080
 ```
 
 Or just open `index.html` directly in your browser.
+
+## Launch and monitor
+
+- Deploy as a static site as usual
+- Track user feedback and moderation signals
+- If a phrase or pack raises risk concerns, update `data/phrases.json` quickly and redeploy

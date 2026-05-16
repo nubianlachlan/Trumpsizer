@@ -35,6 +35,20 @@ h1 {
   margin-top: 4px;
 }
 
+.disclaimer {
+  max-width: 900px;
+  margin: 8px auto 0;
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #aab;
+}
+
+.disclaimer a,
+.instructions a {
+  color: #ffd86b;
+}
+
 /* ── Speaking Indicator ───────────────────────────────────── */
 #speaking-dot {
   position: fixed;
@@ -103,6 +117,7 @@ h1 {
   gap: 8px;
   margin-bottom: 12px;
   justify-content: center;
+  align-items: center;
 }
 
 .btn {
@@ -118,6 +133,24 @@ h1 {
 }
 
 .btn:hover { background: #44445a; color: #fff; }
+
+.control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 0.8rem;
+  color: #c4c4d2;
+}
+
+.control-group select {
+  background: #1d1d2b;
+  border: 1px solid #444;
+  color: #ddd;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+}
 
 /* ── Legend ───────────────────────────────────────────────── */
 .legend {
@@ -147,6 +180,8 @@ h1 {
 #keyboard {
   width: 100%;
   max-width: 980px;
+  overflow-x: auto;
+  padding-bottom: 2px;
 }
 
 .key-row {
@@ -154,6 +189,7 @@ h1 {
   justify-content: center;
   gap: 5px;
   margin-bottom: 5px;
+  min-width: max-content;
 }
 
 .key {
@@ -226,6 +262,40 @@ h1 {
   font-size: 0.88em;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.terms {
+  width: 100%;
+  max-width: 860px;
+  font-family: Arial, sans-serif;
+  color: #ddd;
+  line-height: 1.6;
+}
+
+.terms section {
+  background: #0f0f19;
+  border: 1px solid #2f2f43;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.terms h2 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: #ffe08c;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 680px) {
   .key {
@@ -236,4 +306,14 @@ h1 {
   .key-label { font-size: 0.4rem; }
   .key.special, .key.util { min-width: 68px; }
   .zone-gap { width: 6px; }
+
+  .disclaimer,
+  .instructions {
+    padding: 0 6px;
+  }
+
+  .control-group {
+    width: 100%;
+    justify-content: center;
+  }
 }
