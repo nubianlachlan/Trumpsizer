@@ -14,11 +14,14 @@ For each key, add 2–5 alternatives in `texts`.
 
 ## 2) Tune cadence in one place
 
-Speech cadence lives in `/assets/js/app.js` inside `speak()`.
+Speech cadence lives in `/assets/js/app.js` inside the voice engine (`VOICE_PRESETS`, API prosody payload, browser synthesis fallback).
 Adjust by phrase type:
 - `rate`
 - `pitch`
 - `volume`
+- `pauseMs`
+- `emphasisDepth`
+- `phraseFinalDrop`
 
 Use small changes and compare short recordings before/after.
 
@@ -41,3 +44,9 @@ Track:
 ## 5) On resemblance requests
 
 To keep usage safe and broadly reusable, improvements should focus on **rhetorical patterns and cadence tuning** rather than attempting exact imitation of any real person.
+
+## 6) Use the parody voice stack
+
+- Pick `auto` voice engine to try external parody TTS with browser fallback.
+- Use `satire-subtle`, `satire-strong`, and `rally-comic` presets for A/B listening tests.
+- Follow `docs/parody-voice-stack.md` for API contract and safety rubric.

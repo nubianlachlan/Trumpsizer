@@ -86,6 +86,49 @@
         "Tab": { "type": "special", "label": "Seen this before!", "texts": ["Seen this before!", "Standard playbook!", "Predictable move!"] },
         "Escape": { "type": "special", "label": "Case closed.", "texts": ["Case closed.", "That's the summary.", "Let's leave it there."] }
       }
+    },
+    "parodyRally": {
+      "name": "Parody Rally",
+      "phrases": {
+        "q": { "type": "opener", "label": "Let me be clear,", "texts": ["Let me be clear,", "Let's be very clear,", "I'll say it clearly,"] },
+        "w": { "type": "opener", "label": "Look, folks,", "texts": ["Look, folks,", "Folks, look,", "Listen, folks,"] },
+        "e": { "type": "opener", "label": "Honestly,", "texts": ["Honestly,", "Quite honestly,", "Very honestly,"] },
+        "r": { "type": "opener", "label": "People are saying", "texts": ["People are saying", "A lot of people are saying", "Everyone keeps telling me"] },
+        "t": { "type": "opener", "label": "You can see it,", "texts": ["You can see it,", "Everybody sees it,", "You know it when you see it,"] },
+        "a": { "type": "opener", "label": "I'll tell you this,", "texts": ["I'll tell you this,", "I can tell you this,", "I'm telling you right now,"] },
+        "s": { "type": "opener", "label": "I've watched this,", "texts": ["I've watched this,", "I've watched this closely,", "I've seen this for years,"] },
+        "d": { "type": "opener", "label": "It's true,", "texts": ["It's true,", "Very true,", "It's absolutely true,"] },
+        "f": { "type": "opener", "label": "Here's the deal —", "texts": ["Here's the deal —", "And here's the deal —", "The real deal is this —"] },
+        "g": { "type": "opener", "label": "I've said this again and again —", "texts": ["I've said this again and again —", "I say this all the time —", "I keep saying this —"] },
+        "z": { "type": "opener", "label": "We're going bigger,", "texts": ["We're going bigger,", "We're going much bigger,", "We're going way bigger,"] },
+        "x": { "type": "opener", "label": "It's going to be major,", "texts": ["It's going to be major,", "It's going to be huge,", "It's going to be very big,"] },
+        "c": { "type": "opener", "label": "We're going to win this,", "texts": ["We're going to win this,", "We're going to win big,", "We're going to win again,"] },
+        "v": { "type": "opener", "label": "Believe me,", "texts": ["Believe me,", "You better believe it,", "You can believe that,"] },
+        "b": { "type": "opener", "label": "Top level, no question —", "texts": ["Top level, no question —", "First class, no question —", "Very high level, no question —"] },
+
+        "y": { "type": "topic", "label": "Trade talks", "texts": ["trade talks", "trade deals", "international trade"] },
+        "u": { "type": "topic", "label": "Media coverage", "texts": ["media coverage", "headline coverage", "prime-time coverage"] },
+        "i": { "type": "topic", "label": "Border security", "texts": ["border security", "border operations", "immigration enforcement"] },
+        "o": { "type": "topic", "label": "The economy", "texts": ["the economy", "jobs and growth", "small business growth"] },
+        "p": { "type": "topic", "label": "National confidence", "texts": ["national confidence", "public confidence", "the country's momentum"] },
+        "h": { "type": "topic", "label": "The press narrative", "texts": ["the press narrative", "news framing", "media spin"] },
+        "j": { "type": "topic", "label": "Government process", "texts": ["government process", "federal process", "agency process"] },
+        "k": { "type": "topic", "label": "Working people", "texts": ["working people", "working families", "everyday voters"] },
+        "l": { "type": "topic", "label": "The opposition", "texts": ["the opposition", "the other side", "party leadership"] },
+
+        "n": { "type": "eval", "label": "is strong", "texts": ["is strong", "is very strong", "is incredibly strong"] },
+        "m": { "type": "eval", "label": "is a complete mess", "texts": ["is a complete mess", "is a total mess", "is a real mess"] },
+        ",": { "type": "eval", "label": "is out of control", "texts": ["is out of control", "is totally out of control", "is way out of control"] },
+        ".": { "type": "eval", "label": "is rigged", "texts": ["is rigged", "is badly rigged", "is tilted against people"] },
+        "/": { "type": "eval", "label": "nobody has seen this", "texts": ["nobody has seen this before", "you've never seen anything like it", "it's unlike anything we've seen"] },
+        ";": { "type": "eval", "label": "is handled badly", "texts": ["is handled badly", "is handled very badly", "is being handled the wrong way"] },
+        "'": { "type": "eval", "label": "is tremendous", "texts": ["is tremendous", "is really tremendous", "is absolutely tremendous"] },
+
+        "Enter": { "type": "special", "label": "Wrong!", "texts": ["Wrong!", "Totally wrong!", "No chance!"] },
+        " ": { "type": "special", "label": "— Sad!", "texts": ["— Sad!", "— Very sad!", "— Extremely sad!"] },
+        "Tab": { "type": "special", "label": "Many people know this!", "texts": ["Many people know this!", "A lot of people know this!", "People know this all over!"] },
+        "Escape": { "type": "special", "label": "That much I can tell you.", "texts": ["That much I can tell you.", "I can tell you that right now.", "And that's exactly right."] }
+      }
     }
   }
 }
