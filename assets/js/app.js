@@ -270,8 +270,8 @@ function getFreeTtsVoice() {
   return FREE_TTS_VOICE_BY_PRESET[selectedVoicePreset] || FREE_TTS_FALLBACK_VOICE;
 }
 
-function buildCacheKey(phrase, source) {
-  return [source, selectedStylePack, selectedVoicePreset, phrase.type, phrase.text].join('::');
+function buildCacheKey(phrase, ...sourceParts) {
+  return [...sourceParts, selectedStylePack, selectedVoicePreset, phrase.type, phrase.text].join('::');
 }
 
 function cacheAudioUrl(cacheKey, audioUrl) {
@@ -350,7 +350,7 @@ async function fetchExternalTtsAudioUrl(phrase) {
 async function fetchFreeTtsAudioUrl(phrase) {
   const endpoint = getFreeTtsEndpoint();
   const voice = getFreeTtsVoice();
-  const cacheKey = buildCacheKey(phrase, `${endpoint}?voice=${voice}`);
+  const cacheKey = buildCacheKey(phrase, endpoint, `voice=${voice}`);
   const cached = ttsCache.get(cacheKey);
   if (cached) return cached;
 
@@ -474,7 +474,7 @@ async function speak(phrase) {
     } catch (err) {
       console.warn('External parody voice unavailable, falling back to browser TTS.', err);
       externalTtsUnavailable = true;
-      if (selectedVoiceMode === 'auto') {
+      if (selectedVoiceMode === 'auto' && !freeTtsUnavailable) {
         setActionStatus('Parody voice API unavailable — trying free API fallback.');
       }
     }
