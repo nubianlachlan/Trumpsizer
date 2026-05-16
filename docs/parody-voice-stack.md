@@ -42,6 +42,11 @@ Request fields:
 - `parodySafety` object
 - `prosody` object
 
+`parodySafety` fields currently sent by the app:
+- `styleOnly` (boolean)
+- `noIdentityClaims` (boolean)
+- `maxQuoteDensity` (number)
+
 Supported response shapes:
 
 - Binary audio response (`audio/*` content type), or

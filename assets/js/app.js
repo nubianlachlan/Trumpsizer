@@ -37,6 +37,7 @@ const SHARE_BUTTON_FEEDBACK_MS = 1200;
 const KEY_FLASH_DURATION_MS = 160;
 const EXTERNAL_TTS_TIMEOUT_MS = 2400;
 const TTS_CACHE_MAX_ENTRIES = 220;
+const PREFERRED_VOICE_HINTS = ['david', 'microsoft', 'male', 'daniel', 'guy', 'ryan'];
 
 const VOICE_PRESETS = {
   'satire-subtle': {
@@ -195,7 +196,8 @@ function getPreferredVoice() {
   }
 
   const priority = voices.find(v =>
-    /^en(-|_)?us$/i.test(v.lang) && /(david|microsoft|male|daniel|guy|ryan)/i.test(v.name)
+    /^en(-|_)?us$/i.test(v.lang) &&
+      PREFERRED_VOICE_HINTS.some(hint => v.name.toLowerCase().includes(hint))
   ) || voices.find(v => /^en(-|_)?us$/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
 
   if (priority) preferredVoiceName = priority.name;
