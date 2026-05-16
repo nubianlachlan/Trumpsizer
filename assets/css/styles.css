@@ -150,6 +150,7 @@ h1 {
   border-radius: 5px;
   padding: 6px 8px;
   font-size: 0.8rem;
+  min-width: 170px;
 }
 
 /* ── Legend ───────────────────────────────────────────────── */

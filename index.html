@@ -28,6 +28,21 @@
     <span>Style pack</span>
     <select id="style-pack-select" aria-label="Choose phrase style pack"></select>
   </label>
+  <label class="control-group" for="voice-mode-select">
+    <span>Voice engine</span>
+    <select id="voice-mode-select" aria-label="Choose voice engine">
+      <option value="auto">Auto (Parody API → Browser fallback)</option>
+      <option value="browser">Browser only</option>
+    </select>
+  </label>
+  <label class="control-group" for="voice-preset-select">
+    <span>Voice preset</span>
+    <select id="voice-preset-select" aria-label="Choose parody voice preset">
+      <option value="satire-subtle">Satire Subtle</option>
+      <option value="satire-strong">Satire Strong</option>
+      <option value="rally-comic">Parody Rally</option>
+    </select>
+  </label>
   <button class="btn" onclick="deleteLast()" title="Remove the last phrase (Backspace)">⌫ Delete Last</button>
   <button class="btn" onclick="clearAll()"   title="Clear everything (Delete key)">🗑 Clear All</button>
   <button class="btn" onclick="copyText()"   title="Copy text to clipboard">📋 Copy</button>

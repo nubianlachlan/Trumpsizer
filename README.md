@@ -24,7 +24,7 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
 |-----|--------|
 | `Backspace` | Remove last phrase |
 | `Delete` | Clear everything |
-| On-screen buttons | Delete Last · Clear All · Copy · Mute |
+| On-screen controls | Style pack · Voice engine · Voice preset · Delete Last · Clear All · Copy · Mute |
 
 ## Features
 
@@ -33,14 +33,13 @@ Open `index.html` in any modern browser (or visit the deployed site) and start t
 - **External JSON phrase map** — `data/phrases.json` stores style packs and key → phrase variants (`texts`)
 - **Randomised phrase variants** — each key can speak multiple alternatives for more variety
 - **Shareable links** — copy a URL that preserves the selected style pack and current generated speech
-- **SpeechSynthesis API** — stylised rhetorical delivery with cadence tuned per phrase type  
-  - Openers: confident, slightly quick, higher pitch  
-  - Topics: deliberate, slower, neutral pitch  
-  - Evaluations: emphatic, slightly lower pitch  
-  - Punchlines: punchy, slow, high pitch for comedic effect
+- **Voice engine modes** — `auto` (external parody TTS API with fallback) or `browser` only
+- **Voice presets** — `satire-subtle`, `satire-strong`, `rally-comic`
+- **External TTS caching** — per-phrase audio caching for lower latency during rapid play
+- **SpeechSynthesis fallback** — stylised rhetorical delivery remains available when API is unavailable
 - **Colour-coded keyboard** — spatial grouping reinforces sentence construction through muscle memory
 - **Live text display** — accumulates coloured phrase spans as you type
-- **Safer content posture** — phrase packs focus on generic political rhetoric patterns rather than identity mimicry
+- **Safer content posture** — compliance guardrails block direct identity-claim phrasing and keep style parody-focused
 - **Zero dependencies** — fully frontend-only static site (`index.html` + `assets/css/styles.css` + `assets/js/app.js` + `data/phrases.json`)
 
 ## Phrase Design
@@ -71,6 +70,7 @@ terms.html
 ## Terms & Disclaimer
 
 See `./terms.html` for acceptable-use and non-affiliation guidance.
+See `./docs/parody-voice-stack.md` for the parody voice spec, API contract, and tuning rubric.
 
 ## Running Locally
 
